@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+set -u
+set -o pipefail
+
+today=$(date "+%Y%m%d")
+logdir='Log/Plot_int_dist/'$today'/'
+mkdir -p $logdir
+
+tsv='Nanocompore/Espresso/Methylated_sites/common_sig_positions_in_intensity.tsv'
+
+for trid in ENST00000387347.2; do 
+
+    echo $trid
+
+    err=$logdir$trid'.err'
+    out=${err/.err/.out}
+
+    qsub -e $err -o $out Scripts/Sub/plot_intensity_pattern_dRNA-seq_increasedmem.sh $trid
+    sleep 10s
+
+done
